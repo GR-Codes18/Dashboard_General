@@ -4,6 +4,13 @@ interface ProjectCardProps {
   project: Project;
 }
 
+// Mapeo para formatear el texto del estado de forma limpia
+const statusLabels: Record<Project["status"], string> = {
+  activo: "Activo - En progreso",
+  pendiente: "Pendiente",
+  finalizado: "Finalizado",
+};
+
 export default function ProjectCard({ project }: ProjectCardProps) {
   const { code, name, description, url, previewImage, status, createdAt } = project;
 
@@ -24,7 +31,7 @@ export default function ProjectCard({ project }: ProjectCardProps) {
           </div>
         )}
         <span className={`project-card__status project-card__status--${status}`}>
-          {status === "activo" ? "Activo" : "Archivado"}
+          {statusLabels[status] ?? status}
         </span>
       </div>
 

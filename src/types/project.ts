@@ -5,6 +5,6 @@ export interface Project {
   description: string;
   url: string;
   previewImage?: string;
-  status: "activo" | "archivado";
+  status: "activo" | "pendiente" | "finalizado";
   createdAt: string; // ISO date string
 }
