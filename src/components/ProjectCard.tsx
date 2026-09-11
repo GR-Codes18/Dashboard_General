@@ -1,4 +1,5 @@
 import type { Project } from "../types/project";
+import { irAlProyecto } from "../lib/projectNavigation";
 
 interface ProjectCardProps {
   project: Project;
@@ -49,8 +50,12 @@ export default function ProjectCard({ project }: ProjectCardProps) {
           target="_blank"
           rel="noopener noreferrer"
           className="project-card__link"
+          onClick={(event) => {
+            event.preventDefault();
+            irAlProyecto(project);
+          }}
         >
-          Ver proyecto
+          Abrir proyecto
         </a>
       </div>
     </article>
