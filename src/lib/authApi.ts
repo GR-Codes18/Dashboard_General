@@ -1,6 +1,6 @@
 import { isAuthSession, isAuthUser, type CreatedWorker, type LoginRequestStatusResponse, type LoginResponse } from "../types/auth";
 
-const API_URL = (import.meta.env.VITE_API_URL as string | undefined)?.replace(/\/$/, "");
+const API_URL = ((import.meta.env.VITE_API_URL as string | undefined) || "https://backend-api-production-6a5a.up.railway.app").replace(/\/$/, "");
 
 export const isApiConfigured = Boolean(API_URL);
 
