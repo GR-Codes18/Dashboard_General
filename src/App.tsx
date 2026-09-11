@@ -1,31 +1,32 @@
-import { useState, useMemo } from "react";
+import { useMemo, useState } from "react";
 import AuthScreen from "./components/AuthScreen";
 import Header from "./components/Header";
 import NewProjectButton from "./components/NewProjectButton";
 import ProjectGrid from "./components/ProjectGrid";
 import NewProjectModal from "./components/NewProjectModal";
+import WorkerManagement from "./components/WorkerManagement";
 import { initialProjects } from "./data/projects";
+import { isAuthSession, type AuthSession } from "./types/auth";
 import type { Project } from "./types/project";
 
 const SESSION_STORAGE_KEY = "dashboard_user";
 
-interface AuthenticatedUser {
-  name: string;
-  email: string;
-  password: string;
-}
-
-function getCurrentUser(): AuthenticatedUser | null {
+function getCurrentSession(): AuthSession | null {
   try {
-    const user = localStorage.getItem(SESSION_STORAGE_KEY);
-    return user ? (JSON.parse(user) as AuthenticatedUser) : null;
+    const storedSession = localStorage.getItem(SESSION_STORAGE_KEY);
+    const session = storedSession ? JSON.parse(storedSession) as unknown : null;
+    if (!isAuthSession(session)) {
+      localStorage.removeItem(SESSION_STORAGE_KEY);
+      return null;
+    }
+    return session;
   } catch {
     return null;
   }
 }
 
 export default function App() {
-  const [currentUser, setCurrentUser] = useState<AuthenticatedUser | null>(getCurrentUser);
+  const [currentSession, setCurrentSession] = useState<AuthSession | null>(getCurrentSession);
   const [projects, setProjects] = useState<Project[]>(initialProjects);
   const [searchTerm, setSearchTerm] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -46,17 +47,17 @@ export default function App() {
     setProjects((prev) => [newProject, ...prev]);
   }
 
-  function handleAuthenticated(user: AuthenticatedUser) {
-    localStorage.setItem(SESSION_STORAGE_KEY, JSON.stringify(user));
-    setCurrentUser(user);
+  function handleAuthenticated(session: AuthSession) {
+    localStorage.setItem(SESSION_STORAGE_KEY, JSON.stringify(session));
+    setCurrentSession(session);
   }
 
   function handleLogout() {
     localStorage.removeItem(SESSION_STORAGE_KEY);
-    setCurrentUser(null);
+    setCurrentSession(null);
   }
 
-  if (!currentUser) {
+  if (!currentSession || !isAuthSession(currentSession)) {
     return <AuthScreen onAuthenticated={handleAuthenticated} />;
   }
 
@@ -65,7 +66,8 @@ export default function App() {
       <Header
         searchTerm={searchTerm}
         onSearchChange={setSearchTerm}
-        userName={currentUser.name}
+        userName={currentSession.user.name}
+        userRole={currentSession.user.role}
         onLogout={handleLogout}
       />
 
@@ -73,6 +75,10 @@ export default function App() {
         projectCount={filteredProjects.length}
         onClick={() => setIsModalOpen(true)}
       />
+
+      <div className="team-actions">
+        <WorkerManagement session={currentSession} />
+      </div>
 
       <ProjectGrid projects={filteredProjects} />
 

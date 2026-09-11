@@ -1,5 +1,22 @@
 # React + TypeScript + Vite
 
+## Autenticación
+
+La implementación del sistema de roles está en [Guía para el equipo de Frontend.md](Gu%C3%ADa%20para%20el%20equipo%20de%20Frontend.md). Incluye:
+
+- Login de Analista con OTP por correo.
+- Login de Trabajador con aprobación por correo y polling cada 4 segundos.
+- Estados `PENDIENTE`, `ACEPTADA`, `RECHAZADA` y `EXPIRADA`.
+- Validación de sesión mediante `/auth/me`.
+- Creación de Trabajadores únicamente para Analistas.
+
+Copia `.env.example` como `.env.local` y configura `VITE_API_URL` con la URL pública del backend. No añadas `/auth` al final.
+
+Sin `VITE_API_URL`, se habilita el modo demo local:
+
+- Analista: `analistabigdata2@gmail.com` / `12345678`
+- OTP demo: `123456`
+
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
 Currently, two official plugins are available:

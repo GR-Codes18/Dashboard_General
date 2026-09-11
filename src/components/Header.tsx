@@ -2,10 +2,11 @@ interface HeaderProps {
   searchTerm: string;
   onSearchChange: (value: string) => void;
   userName: string;
+  userRole: "ANALISTA" | "TRABAJADOR";
   onLogout: () => void;
 }
 
-export default function Header({ searchTerm, onSearchChange, userName, onLogout }: HeaderProps) {
+export default function Header({ searchTerm, onSearchChange, userName, userRole, onLogout }: HeaderProps) {
   return (
     <header className="header">
       <div className="header__titles">
@@ -23,7 +24,7 @@ export default function Header({ searchTerm, onSearchChange, userName, onLogout 
           aria-label="Buscar proyecto"
         />
         <div className="header__account">
-          <span className="header__user">Hola, {userName}</span>
+          <span className="header__user">Hola, {userName} · {userRole}</span>
           <button type="button" className="header__logout" onClick={onLogout}>
             Cerrar sesión
           </button>
